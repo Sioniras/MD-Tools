@@ -78,7 +78,9 @@ int main(int argc,char** argv)
 	
 	// Helper definitions
 	std::string s[list.size()];
+	int cs[list.size()] = {0};
 	int k = 0;
+	int k2 = 0;
 	double m = 0.0;
 	
 	// Now go through the entire list
@@ -88,6 +90,7 @@ int main(int argc,char** argv)
 		str.str("");
 		str << std::setw(columnpadding) << (*i).Left << " -" << std::setw(columnpadding) << (*i).Right + " |";
 		k = 0;
+		k2 = 0;
 		m = 0.0;
 		
 		for(auto j = list.cbegin(); j != list.cend(); j++)
@@ -99,6 +102,7 @@ int main(int argc,char** argv)
 			if(it != (*j)->List().cend() && (*it).Mean >= minscore)
 			{
 				k++;
+				cs[k2]++;
 				m = (m < (*it).Mean)?(*it).Mean:m;
 				str << " " << std::setw(columnpadding) << (*it).Mean << " |";
 			}
@@ -106,6 +110,8 @@ int main(int argc,char** argv)
 			{
 				str << " " << std::setw(columnpadding) << "" << " |";
 			}
+			
+			k2++;
 		}
 		
 		// Add the result-string to the appropriate output-string, i.e. based on number of files in which the contact was found ("k")
@@ -116,7 +122,12 @@ int main(int argc,char** argv)
 	// Write contacts in order of ascending number of trajectories in which the contact was present
 	for(unsigned int i = 0;i < list.size(); i++)
 		std::cout << s[i];
-		
+	
+	// Write total number of contacts
+	std::cout << std::string(str.str().size(),'-') << std::endl;
+	std::cout << std::setw(2*columnpadding+2) << "Total contacts |";
+	for(unsigned int i = 0;i < list.size(); i++)
+		std::cout << " " << std::setw(columnpadding) << cs[i] << " |";
 	std::cout << std::endl;
 }
 //////////////////////////////////////////////////////////////////////////////
